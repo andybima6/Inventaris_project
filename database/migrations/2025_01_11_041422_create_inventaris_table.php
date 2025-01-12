@@ -10,9 +10,10 @@ return new class extends Migration
     {
         Schema::create('inventaris', function (Blueprint $table) {
             $table->id();
-           
+
             $table->string('name');
             $table->string('category');
+            $table->date('expired')->nullable();
             $table->integer('quantity');
             $table->enum('status', ['Available', 'Borrowed', 'Damaged', 'Lost'])->default('Available');
             $table->string('image_url')->nullable();

@@ -16,9 +16,8 @@ class UserSeeder extends Seeder
     public function run()
     {
         // Menambahkan user pertama untuk testing atau admin
-        User::create([
-            'name' => 'Andy',
-            'email' => 'andy@example.com',
+        User::create(['name' => 'iqbal',
+            'email' => 'iqbal@example.com',
             'password' => Hash::make('123456'), // Jangan lupa untuk meng-hash password
         ]);
 

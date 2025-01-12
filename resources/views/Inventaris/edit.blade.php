@@ -32,12 +32,25 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="status" style="font-weight: bold;">Status</label>
-                                <select name="status" id="status" class="form-control" required>
-                                    <option value="Available" {{ $item->status == 'Available' ? 'selected' : '' }}>Available</option>
-                                    <option value="Unavailable" {{ $item->status == 'Unavailable' ? 'selected' : '' }}>Unavailable</option>
-                                </select>
+                                <label for="expired" style="font-weight: bold;">Tanggal Kadaluarsa</label>
+                                <input type="date" name="expired" id="expired" class="form-control" value="{{ $item->expired }}" required>
                             </div>
+
+
+                            <div class="form-group">
+                                <label for="status" class="form-label" style="font-weight: bold; ">Status</label>
+                                <input
+                                    type="text"
+                                    name="status"
+                                    id="status"
+                                    class="form-control"
+                                    value="Available"
+                                    readonly
+                                    style="background-color: #f8f9fa; color: #495057; font-weight: bold; cursor: not-allowed;">
+                                <small class="form-text text-muted">Status ini bersifat tetap dan tidak dapat diubah.</small>
+                            </div>
+
+
 
                             <div class="form-group">
                                 <label for="image" style="font-weight: bold;">Gambar</label>

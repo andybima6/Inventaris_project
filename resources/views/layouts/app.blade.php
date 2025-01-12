@@ -8,11 +8,7 @@
     <title>Dashboard</title>
     <!-- plugins:css -->
     @vite(['resources/assets/vendors/mdi/css/materialdesignicons.min.css', 'resources/assets/vendors/css/vendor.bundle.base.css', 'resources/assets/css/style.css'])
-    <!-- Plugin css for this page -->
-    <!-- End Plugin css for this page -->
-    <!-- inject:css -->
-    <!-- endinject -->
-    <!-- Layout styles -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../../assets/css/style.css">
     <!-- Bootstrap CSS -->
 
@@ -25,12 +21,16 @@
     <div class="container-scroller">
         <!-- partial:../../partials/_sidebar.html -->
         <nav class="sidebar sidebar-offcanvas" id="sidebar">
-            <div class="sidebar-brand-wrapper d-none d-lg-flex align-items-center justify-content-center fixed-top">
-                <a class="sidebar-brand brand-logo" href="../../index.html"><img
-                        src="{{ Vite::asset('resources/assets/images/logo.svg') }}" alt="logo" /></a>
-                <a class="sidebar-brand brand-logo-mini" href="../../index.html"><img
-                        src="{{ Vite::asset('resources/assets/images/logo-mini.svg') }}" alt="logo" /></a>
+            <div class="sidebar-brand-wrapper d-none d-lg-flex align-items-center justify-content-center fixed-top"
+                style="padding-left: 52px;">
+                <a class="sidebar-brand brand-logo" href="../../index.html">
+                    <span class="brand-text"
+                        style="font-family: 'Arial', sans-serif; font-weight: 600; font-size: 24px; color: white; text-transform: uppercase;">
+                        Selop
+                    </span>
+                </a>
             </div>
+
             <ul class="nav">
                 <li class="nav-item profile">
                     <div class="profile-desc">
@@ -52,7 +52,18 @@
                 <li class="nav-item nav-category">
                     <span class="nav-link">Navigation</span>
                 </li>
-                <li class="nav-item menu-items">
+
+                <li class="nav-item menu-items mt-3">
+                    <a class="nav-link" href="{{ route('profile') }}">
+                        <span class="menu-icon">
+                            <i class="mdi mdi-account"></i>
+                        </span>
+                        <span class="menu-title">Profile</span>
+                    </a>
+                </li>
+
+
+                <li class="nav-item menu-items mt-3">
                     <a class="nav-link" href="{{ route('dashboard') }}">
                         <span class="menu-icon">
                             <i class="mdi mdi-speedometer"></i>
@@ -63,12 +74,13 @@
 
                 <li class="nav-item menu-items mt-3">
                     <a class="nav-link" href="{{ route('inventaris.index') }}">
-                      <span class="menu-icon">
-                        <i class="mdi mdi-playlist-play"></i>
-                      </span>
-                      <span class="menu-title">Inventaris</span>
+                        <span class="menu-icon">
+                            <i class="mdi mdi-playlist-play"></i>
+                        </span>
+                        <span class="menu-title">Inventaris</span>
                     </a>
-                  </li>
+                </li>
+
 
             </ul>
         </nav>
@@ -100,7 +112,7 @@
                                     <img class="img-xs rounded-circle"
                                         src="{{ Vite::asset('resources/assets/images/faces/face15.jpg') }}"
                                         alt="">
-                                        <p class="mb-0 d-none d-sm-block navbar-profile-name">{{ Auth::user()->name }}</p>
+                                    <p class="mb-0 d-none d-sm-block navbar-profile-name">{{ Auth::user()->name }}</p>
 
                                     <i class="mdi mdi-menu-down d-none d-sm-block"></i>
                                 </div>
@@ -132,7 +144,7 @@
             <div class="main-panel">
 
 
-                    @yield('content')
+                @yield('content')
 
                 <!-- content-wrapper ends -->
                 <!-- partial:../../partials/_footer.html -->
@@ -145,7 +157,9 @@
     </div>
     <!-- container-scroller -->
     <!-- plugins:js -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+    </script>
     @vite(['resources/assets/vendors/js/vendor.bundle.base.js', 'resources/assets/js/off-canvas.js', 'resources/assets/js/hoverable-collapse.js', 'resources/assets/js/misc.js', 'resources/assets/js/settings.js', 'resources/assets/js/todolist.js', 'resources/js/app.js'])
     <!-- endinject -->
     <!-- Custom js for this page -->

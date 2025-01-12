@@ -17,6 +17,7 @@
                                         <th style="padding: 15px; color:black">Nama Barang</th>
                                         <th style="padding: 15px; color:black">Kategori</th>
                                         <th style="padding: 15px; color:black">Jumlah</th>
+                                        <th style="padding: 15px; color:black">Tanggal Kadaluarsa</th>
                                         <th style="padding: 15px; color:black">Status</th>
                                         <th style="padding: 15px; color:black">Gambar</th>
                                     </tr>
@@ -26,6 +27,7 @@
                                         <td style="background-color: #f8f9fa; color: #495057; padding: 15px;">{{ $item->name }}</td>
                                         <td style="background-color: #f8f9fa; color: #495057; padding: 15px;">{{ $item->category }}</td>
                                         <td style="background-color: #f8f9fa; color: #495057; padding: 15px;">{{ $item->quantity }}</td>
+                                        <td style="background-color: #f8f9fa; color: #495057; padding: 15px;">{{ $item->expired }}</td>
                                         <td style="background-color: #f8f9fa; color: #495057; padding: 15px;">
                                             <span class="badge badge-{{ $item->status == 'Available' ? 'success' : 'danger' }}" style="font-size: 14px;">
                                                 {{ $item->status }}

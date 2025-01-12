@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,10 +8,15 @@
     <!-- Tambahkan link ke CSS yang Anda inginkan -->
     <link rel="stylesheet" href="{{ asset('css/login.css') }}">
 </head>
-<body>
 
+<body>
+    <h1 class="text-center">SELOP</h1>
+    <p class="text-center">Sistem Elektronik Logistik dan Peralatan</p>
     <div class="container" id="container">
+        <!-- Sign Up Container -->
         <div class="form-container sign-up-container">
+            <h1 class="text-center">SELOP</h1>
+            <p class="text-center">Sistem Elektronik Logistik dan Peralatan</p>
             <form action="{{ route('proses_register') }}" method="POST">
                 @csrf
                 <h1>Create Account</h1>
@@ -18,11 +24,11 @@
                 <input type="text" name="name" placeholder="Name" required />
                 <input type="email" name="email" placeholder="Email" required />
                 <input type="password" name="password" placeholder="Password" required />
-
                 <button type="submit">Sign Up</button>
             </form>
         </div>
 
+        <!-- Sign In Container -->
         <div class="form-container sign-in-container">
             <form action="{{ route('proses_login') }}" method="POST">
                 @csrf
@@ -33,6 +39,8 @@
                 <button type="submit">Sign In</button>
             </form>
         </div>
+
+        <!-- Overlay -->
         <div class="overlay-container">
             <div class="overlay">
                 <div class="overlay-panel overlay-left">
@@ -49,7 +57,6 @@
         </div>
     </div>
 
-
     <script>
         const signUpButton = document.getElementById('signUp');
         const signInButton = document.getElementById('signIn');
@@ -65,4 +72,5 @@
     </script>
 
 </body>
+
 </html>

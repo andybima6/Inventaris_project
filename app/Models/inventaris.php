@@ -14,11 +14,11 @@ class Inventaris extends Model
 
     // Menentukan kolom-kolom yang dapat diisi (fillable)
     protected $fillable = [
-        'user_id',
         'name',
         'category',
         'quantity',
         'status',
+        'expired',
         'image_url',
     ];
 

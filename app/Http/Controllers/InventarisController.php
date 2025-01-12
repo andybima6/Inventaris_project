@@ -1,9 +1,14 @@
 <?php
+
 namespace App\Http\Controllers;
+
 
 use App\Models\Inventaris;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
+use Mpdf\Mpdf;
 
 class InventarisController extends Controller
 {
@@ -17,39 +22,64 @@ class InventarisController extends Controller
 
     public function create()
     {
-        // Menampilkan form untuk menambah inventaris
-        return view('inventaris.create');
+        // Get all unique categories from the inventaris table
+        $categories = \App\Models\Inventaris::select('category')->distinct()->get();
+
+        // Get all existing names (if needed)
+        $names = \App\Models\Inventaris::select('name')->distinct()->get();
+
+        return view('inventaris.create', compact('categories', 'names'));
     }
+
 
     public function store(Request $request)
     {
-        // Validasi input
+        // Validate the input
         $request->validate([
-            'name' => 'required|string|max:255',
-            'category' => 'required|string|max:255',
+            'name' => 'nullable|string|max:255',
+            'category' => 'nullable|string|max:255',
             'quantity' => 'required|integer|min:1',
-            'status' => 'required|in:Available,Borrowed,Damaged,Lost',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Validasi gambar
+            'expired' => 'nullable|date',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        // Menyimpan file gambar jika ada
-        $imageUrl = null;
-        if ($request->hasFile('image')) {
-            // Menyimpan gambar di storage/app/public/inventaris_images
-            $imageUrl = $request->file('image')->store('inventaris_images', 'public');
+        // Determine the name and category to save
+        $name = $request->name ?: $request->input('name_other', null);
+        $category = $request->category ?: $request->input('category_other', null);
+
+        // Ensure name and category are not both empty
+        if (!$name || !$category) {
+            return back()->withErrors(['name' => 'Nama dan Kategori harus diisi']);
         }
 
-        // Menyimpan data inventaris tanpa user_id
+        // Save the image if provided
+        $imageUrl = null;
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageUrl = $image->store('images', 'public');
+        }
+
+        // Retrieve the expired date
+        $expired = $request->expired; // Ambil nilai expired dari input form
+
+        // Always set the status to "Available" (Tersedia)
+        $status = 'Available';
+
+        // Create a new Inventaris record
         Inventaris::create([
-            'name' => $request->input('name'),
-            'category' => $request->input('category'),
-            'quantity' => $request->input('quantity'),
-            'status' => $request->input('status'),
-            'image_url' => $imageUrl, // Menyimpan URL gambar
+            'name' => $name,
+            'category' => $category,
+            'expired' => $expired,
+            'quantity' => $request->quantity,
+            'status' => $status,
+            'image_url' => $imageUrl,
         ]);
 
-        return redirect()->route('inventaris.index')->with('success', 'Inventaris berhasil ditambahkan!');
+        return redirect()->route('inventaris.index')->with('success', 'Barang berhasil ditambahkan');
     }
+
+
+
 
     public function edit($id)
     {
@@ -57,44 +87,46 @@ class InventarisController extends Controller
         return view('inventaris.edit', compact('item'));
     }
 
-     // Handle update form submission
-     public function update(Request $request, $id)
-     {
-         // Validate the incoming data
-         $validated = $request->validate([
-             'name' => 'required|string|max:255',
-             'category' => 'required|string|max:255',
-             'quantity' => 'required|integer|min:1',
-             'status' => 'required|string|in:Available,Unavailable',
-             'image' => 'nullable|image|max:2048',
-         ]);
+    // Handle update form submission
+    public function update(Request $request, $id)
+    {
+        // Validate the incoming data
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'category' => 'required|string|max:255',
+            'expired' => 'required|date',
+            'quantity' => 'required|integer|min:1',
+            'status' => 'required|string|in:Available,Unavailable',
+            'image' => 'nullable|image|max:2048',
+        ]);
 
-         // Find the item to be updated
-         $item = Inventaris::findOrFail($id);
+        // Find the item to be updated
+        $item = Inventaris::findOrFail($id);
 
-         // Update the item fields
-         $item->name = $validated['name'];
-         $item->category = $validated['category'];
-         $item->quantity = $validated['quantity'];
-         $item->status = $validated['status'];
+        // Update the item fields
+        $item->name = $validated['name'];
+        $item->category = $validated['category'];
+        $item->quantity = $validated['quantity'];
+        $item->expired = $validated['expired'];
+        $item->status = $validated['status'];
 
-         // Handle image upload if a new one is provided
-         if ($request->hasFile('image')) {
-             // Delete the old image if exists
-             if ($item->image_url) {
-                 Storage::delete('public/' . $item->image_url);
-             }
+        // Handle image upload if a new one is provided
+        if ($request->hasFile('image')) {
+            // Delete the old image if exists
+            if ($item->image_url) {
+                Storage::delete('public/' . $item->image_url);
+            }
 
-             // Store the new image
-             $imagePath = $request->file('image')->store('inventaris_images', 'public');
-             $item->image_url = $imagePath;
-         }
+            // Store the new image
+            $imagePath = $request->file('image')->store('inventaris_images', 'public');
+            $item->image_url = $imagePath;
+        }
 
-         // Save the changes to the database
-         $item->save();
+        // Save the changes to the database
+        $item->save();
 
-         return redirect()->route('inventaris.index')->with('success', 'Inventaris updated successfully!');
-     }
+        return redirect()->route('inventaris.index')->with('success', 'Inventaris updated successfully!');
+    }
 
 
     public function destroy(Inventaris $inventaris)
@@ -120,5 +152,45 @@ class InventarisController extends Controller
 
         // Return the view with the item data
         return view('inventaris.show', compact('item'));
+    }
+    public function view_pdf()
+    {
+        // Ambil semua data inventaris dari database
+        $inventaris = Inventaris::all();
+
+        // Render view ke dalam HTML menggunakan Blade
+        $html = view('inventaris.export', compact('inventaris'))->render();
+
+        // Inisialisasi mPDF
+        $mpdf = new Mpdf();
+
+        // Tambahkan HTML ke mPDF
+        $mpdf->WriteHTML($html);
+
+        // Tentukan nama file PDF
+        $fileName = 'Laporan-Inventaris-' . Carbon::now()->format('d-m-Y') . '.pdf';
+
+        // Tampilkan PDF di browser
+        $mpdf->Output($fileName, 'I'); // 'I' untuk menampilkan di browser
+    }
+    public function download_pdf()
+    {
+        // Ambil semua data inventaris dari database
+        $inventaris = Inventaris::all();
+
+        // Render view ke dalam HTML menggunakan Blade
+        $html = view('inventaris.export', compact('inventaris'))->render();
+
+        // Inisialisasi mPDF
+        $mpdf = new Mpdf();
+
+        // Tambahkan HTML ke mPDF
+        $mpdf->WriteHTML($html);
+
+        // Tentukan nama file PDF
+        $fileName = 'Laporan-Inventaris-' . Carbon::now()->format('d-m-Y') . '.pdf';
+
+        // Unduh PDF
+        $mpdf->Output($fileName, 'D'); // 'D' untuk mengunduh file
     }
 }

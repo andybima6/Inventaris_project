@@ -1,9 +1,13 @@
 <?php
 
+use App\Exports\InventarisExport;
+use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InventarisController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use Maatwebsite\Excel\Facades\Excel;
 
 Route::get('/', function () {
     return view('login');
@@ -41,3 +45,14 @@ Route::put('/inventaris/{inventaris}', [InventarisController::class, 'update'])-
 Route::delete('/inventaris/{inventaris}', [InventarisController::class, 'destroy'])->name('inventaris.destroy')->middleware('auth');
 
 Route::get('/inventaris/{id}', [InventarisController::class, 'show'])->name('inventaris.show');
+Route::post('/dashboard/{id}/update-status', [DashboardController::class, 'updateStatus'])->name('update-status');
+
+
+
+Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+
+// Route untuk menampilkan PDF di browser
+Route::get('/inventaris/view/pdf', [InventarisController::class, 'view_pdf'])->name('inventaris.view_pdf');
+
+// Route untuk mendownload PDF
+Route::get('/inventaris/download/pdf', [InventarisController::class, 'download_pdf'])->name('inventaris.download_pdf');
