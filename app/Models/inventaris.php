@@ -20,6 +20,7 @@ class Inventaris extends Model
         'status',
         'expired',
         'image_url',
+
     ];
 
     // Relasi dengan model User (bila diperlukan)

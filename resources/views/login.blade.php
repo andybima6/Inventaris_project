@@ -15,9 +15,8 @@
     <div class="container" id="container">
         <!-- Sign Up Container -->
         <div class="form-container sign-up-container">
-            <h1 class="text-center">SELOP</h1>
-            <p class="text-center">Sistem Elektronik Logistik dan Peralatan</p>
-            <form action="{{ route('proses_register') }}" method="POST">
+            <!-- Update action untuk POST ke route register -->
+            <form action="{{ url('/register') }}" method="POST">
                 @csrf
                 <h1>Create Account</h1>
                 <span>or use your email for registration</span>
@@ -30,7 +29,8 @@
 
         <!-- Sign In Container -->
         <div class="form-container sign-in-container">
-            <form action="{{ route('proses_login') }}" method="POST">
+            <!-- Update action untuk POST ke route login -->
+            <form action="{{ url('/login') }}" method="POST">
                 @csrf
                 <h1>Sign in</h1>
                 <span>or use your account</span>
